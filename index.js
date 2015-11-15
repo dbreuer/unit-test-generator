@@ -19,6 +19,10 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function dasherize( string ) {
+    return string. replace ( /([^])([A-Z]+)([^$])/g, '$1-$2$3' ). toLowerCase();
+}
+
 function gulpTests(options) {
     gutil.log('stuff happened', 'Really it did', gutil.colors.magenta('123'));
 
@@ -27,12 +31,12 @@ function gulpTests(options) {
         opts = {
             'src': options.src || './src/',
             'dist': options.dist || './dist/',
-            'temp': options.temp || './templates/',
+            'temp': options.temp || 'templates/',
             'testFileSuffix': options.testFileSuffix || '.spec.js',
             'projectPrefix': options.projectPrefix || 'project'
         };
     }
-
+    console.log();
 
     if (!options) {
         throw new PluginError(PLUGIN_NAME, 'Missing options object!');
@@ -58,10 +62,32 @@ function gulpTests(options) {
             if (file.isBuffer()) {
 
                 if (fs.existsSync(file.path.replace('.js', '.spec.js'))) {
-                    gutil.log('Warning:', 'Test file found', gutil.colors.blue(file.path));
-                    gutil.log('Skipped:', gutil.colors.green("File not created"));
+                    gutil.log('Skipped:', 'spec file exists ', gutil.colors.green("File not created"));
                     return cb();
                 }
+
+                if(file.path.indexOf('min.js') > -1) {
+                    gutil.log('Skipped:','minified' , gutil.colors.green("File not created"));
+                    return cb();
+                }
+
+                if(file.path.indexOf('test.js') > -1) {
+                    gutil.log('Skipped:','test file' , gutil.colors.green("File not created"));
+                    return cb();
+                }
+
+                if(file.path.indexOf('build.js') > -1) {
+                    gutil.log('Skipped:','Build file' , gutil.colors.green("File not created"));
+                    return cb();
+                }
+
+                if(file.path.indexOf('bower_components') > -1) {
+                    gutil.log('Skipped:','bower file' , gutil.colors.green("File not created"));
+                    return cb();
+                }
+
+                gutil.log(gutil.colors.green(file.path));
+
 
                 // Comments match regexp
                 // patternForComments= /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg
@@ -85,6 +111,7 @@ function gulpTests(options) {
                     typeName: null,
                     module: options.projectPrefix + '.' + truncateJsSuffix(_(file.path.split('/')).last()),
                     dependency: null,
+                    directiveName: null,
                     path: file.path,
                     filename: _(file.path.split('/')).last(),
                     amdPath: 'namm',
@@ -104,11 +131,15 @@ function gulpTests(options) {
                 if (opt.type === null && modulematch) {
                     opt.module = modulematch[2]
                 }
+                if (opt.type === 'directive') {
+                    opt.directiveName = dasherize(opt.typeName);
+                }
+
                 var templateFile = (opt.type!==null)?'angular.'+opt.type+'.temp':'angular.module.temp';
-                var fileContent=String(fs.readFileSync("../templates/"+templateFile, "utf8"));
+                var fileContent=String(fs.readFileSync(__dirname+"/templates/"+templateFile, "utf8"));
 
                 var compiled = _.template(fileContent);
-
+                console.log()
                 file.contents = new Buffer(compiled(opt));
 
                 file.path = gutil.replaceExtension(file.path, '.spec.js'); // file.js
