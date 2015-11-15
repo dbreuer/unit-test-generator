@@ -1,0 +1,28 @@
+/**
+* date: ${date}
+* path: ${path}
+* filename: ${filename}
+*/
+'use strict';
+
+if (jasmine.version) { //the case for version 2.0.0
+    console.log('jasmine-version:' + jasmine.version);
+}
+
+describe('Filter: ${typeName}', function () {
+
+  // load the filter's module
+  beforeEach(module('${module}'));
+
+  // initialize a new instance of the filter before each test
+  var ${typeName};
+  beforeEach(inject(function ($filter) {
+    ${typeName} = $filter('${typeName}');
+  }));
+
+  it('should return the input prefixed with "${typeName} filter:"', function () {
+    var text = 'angularjs';
+    expect(${typeName}(text)).toBe('${typeName} filter: ' + text);
+  });
+
+});

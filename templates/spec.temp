@@ -1,0 +1,20 @@
+/**
+* date: ${date}
+* path: ${path}
+* filename: ${filename}
+*/
+define(['${amdPath}'], function(${capitalizedName}) {
+'use strict';
+
+    describe('${amdPath}', function() {
+        var ${name};
+        beforeEach(function() {
+            ${name} = new ${capitalizedName}();
+        });
+        describe('constructor', function() {
+
+        });
+
+    });
+
+});

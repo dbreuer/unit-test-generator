@@ -1,0 +1,25 @@
+/**
+* date: ${date}
+* path: ${path}
+* filename: ${filename}
+*/
+'use strict';
+
+if (jasmine.version) { //the case for version 2.0.0
+    console.log('jasmine-version:' + jasmine.version);
+}
+
+describe('Module: ${module}', function () {
+
+  // load the directive's module
+  beforeEach(module('${module}'));
+
+  var element,
+    scope;
+
+  beforeEach(inject(function ($rootScope) {
+    scope = $rootScope.$new();
+  }));
+
+
+});

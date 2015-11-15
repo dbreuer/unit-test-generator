@@ -1,0 +1,27 @@
+/**
+* date: ${date}
+* path: ${path}
+* filename: ${filename}
+*/
+'use strict';
+
+if (jasmine.version) { //the case for version 2.0.0
+    console.log('jasmine-version:' + jasmine.version);
+}
+
+describe('Service: ${typeName}', function () {
+
+  // load the service's module
+  beforeEach(module('${module}'));
+
+  // instantiate service
+  var ${typeName};
+  beforeEach(inject(function (_${typeName}_) {
+    ${typeName} = _${typeName}_;
+  }));
+
+  it('should do something', function () {
+    expect(!!${typeName}).toBe(true);
+  });
+
+});

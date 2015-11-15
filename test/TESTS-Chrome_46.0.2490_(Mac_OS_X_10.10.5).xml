@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<testsuite name="Chrome 46.0.2490 (Mac OS X 10.10.5)" package="" timestamp="2015-11-15T16:42:27" id="0" hostname="Breuers-MacBook-Pro.local" tests="2" errors="0" failures="0" time="0.118">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36"/>
+  </properties>
+  <testcase name="should attach a list of awesomeThings to the scope" time="0.098" classname="Chrome_46_0_2490_(Mac_OS_X_10_10_5).Controller: AboutController"/>
+  <testcase name="should do something" time="0.02" classname="Chrome_46_0_2490_(Mac_OS_X_10_10_5).Service: API"/>
+  <system-out>
+    <![CDATA[Chrome 46.0.2490 (Mac OS X 10.10.5) LOG: 'jasmine-version:2.3.4'
+,Chrome 46.0.2490 (Mac OS X 10.10.5) LOG: 'jasmine-version:2.3.4'
+,Chrome 46.0.2490 (Mac OS X 10.10.5) LOG: 'jasmine-version:2.3.4'
+
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

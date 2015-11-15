@@ -1,0 +1,29 @@
+/**
+* date: ${date}
+* path: ${path}
+* filename: ${filename}
+*/
+'use strict';
+
+if (jasmine.version) { //the case for version 2.0.0
+    console.log('jasmine-version:' + jasmine.version);
+}
+
+describe('Directive: ${typeName}', function () {
+
+  // load the directive's module
+  beforeEach(module('${module}'));
+
+  var element,
+    scope;
+
+  beforeEach(inject(function ($rootScope) {
+    scope = $rootScope.$new();
+  }));
+
+  it('should make hidden element visible', inject(function ($compile) {
+    element = angular.element('<<%= _.dasherize(name) %>></<%= _.dasherize(name) %>>');
+    element = $compile(element)(scope);
+    expect(element.text()).toBe('this is the ${typeName} directive');
+  }));
+});

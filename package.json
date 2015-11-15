@@ -1,0 +1,42 @@
+{
+  "name": "gulp-create-test-files",
+  "version": "0.1.0",
+  "description": "Gulp Karma unit test file creator for Native and Angular Javascripts.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbreuer/gulp-create-test-files.git"
+  },
+  "keywords": [
+    "gulp",
+    "gulpfriendly",
+    "karma",
+    "javascript",
+    "create",
+    "unit",
+    "test",
+    "angular",
+    "angularjs"
+  ],
+  "author": "David Breuer <dbreuer83@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dbreuer/gulp-create-test-files/issues"
+  },
+  "homepage": "https://github.com/dbreuer/gulp-create-test-files#readme",
+  "dependencies": {
+    "fs": "0.0.2",
+    "gulp-front-matter": "^1.3.0",
+    "gulp-template": "^3.1.0",
+    "lodash": "^3.10.1",
+    "through2": "^2.0.0",
+    "uglify-js": "^2.6.0",
+    "uglifyjs": "^2.4.10"
+  }
+}
