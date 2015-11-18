@@ -10,20 +10,56 @@ if (jasmine.version) { //the case for version 2.0.0
 }
 
 describe('Service: ${typeName}', function () {
-
+  var CacheFactory, $httpBackend
   // load the service's module
-  beforeEach(function() {
-    module('${module}')
-  });
+   beforeEach(function(){
+      //inject each dependency
+      <% _.each(dependency, function(inject) { %>
+        module(${inject});
+      <% }); %>
+      //inject angular module
+      module('${module}');
+      inject(function ($injector) {
+         CacheFactory = $injector.get("CacheFactory");
 
-  // instantiate service
-  var ${typeName};
-  beforeEach(inject(function (_${typeName}_) {
-    ${typeName} = _${typeName}_;
-  }));
+        $httpBackend = $injector.get('$httpBackend');
+      })
+    });
 
-  it('should do something', function () {
-    expect(!!${typeName}).toBe(true);
-  });
+     beforeEach(function () {
+        //@todo: destroy all cache
+        //CacheFactory.destroy('abc123456');
 
+        });
+
+    <% _.each(services, function(service) { %>
+    //@todo: each todo has success fake call
+
+   it('should get ${service.name} success', function() {
+
+              $httpBackend.expect('${service.type}', ${service.url})
+                  //.respond(200, '{"user_dashboard_member_name":" ","user_dashboard_member_id":"1422539531","user_dashboard_role_links":{"101":{"value":"staff","name":"Staff"},"91":{"value":"council-member","name":"Council Member"},"31":{"value":"mip","name":"MIP"},"29":{"value":"fmaat","name":"FMAAT"},"30":{"value":"maat","name":"MAAT"},"106":{"value":"accounting-qualification","name":"Student : Accounting Qualification"},"71":{"value":"affiliate","name":"Affiliate"},"116":{"value":"bookkeeping-and-computerised-accounting","name":"Student : L2 Certificate in Bookkeeping"},"111":{"value":"access","name":"Student : L1 Award in Accounting (AAT Access)"},"96":{"value":"marker","name":"Marker"},"86":{"value":"external-verifier","name":"External Verifier"},"126":{"value":"training-provider","name":"Training Provider"},"76":{"value":"accredited-employer","name":"Accredited Employer"},"81":{"value":"consultant","name":"Consultant"},"251":{"value":"lapsed-student","name":"Lapsed Student"},"236":{"value":"lapsed-maat","name":"Lapsed MAAT"},"241":{"value":"lapsed-fmaat","name":"Lapsed FMAAT"},"246":{"value":"lapsed-affiliate","name":"Lapsed Affiliate"},"306":{"value":"bookkeeping-and-computerised-accounting","name":"Student : L1 Award in Computerised Accounting"}},"user_dashboard_user_id":"1838648","success":true}');
+                  .respond(200)
+              ${service.name}.${service.function}()
+                  .then(function(data) {
+                      expect(data.data.success).toBeTruthy();
+                  });
+
+              $httpBackend.flush();
+          });
+     //@todo: each todo has error fake call
+      it('should get ${service.name} error', function() {
+
+          $httpBackend.expect('${service.type}', ${service.url})
+              .respond(404);
+
+          ${service.name}.${service.function}()
+              .catch(function(data) {
+
+                  expect(data).toBeTruthy();
+              });
+
+          $httpBackend.flush();
+      });
+    <% }); %>
 });

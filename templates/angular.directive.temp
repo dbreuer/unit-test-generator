@@ -10,20 +10,29 @@ if (jasmine.version) { //the case for version 2.0.0
 }
 
 describe('Directive: ${typeName}', function () {
-
+  var element, $rootScope, $compile, $controller, scope;
   // load the directive's module
-  beforeEach(module('${module}'));
-
-  var element,
-    scope;
-
-  beforeEach(inject(function ($rootScope) {
-    scope = $rootScope.$new();
+  beforeEach(
+   //inject each dependency
+    <% _.each(dependency, function(inject) { %>
+    module('${inject}');
+    <% }); %>
+    //inject angular module
+    module('${name}');
+    inject(function ($injector) {
+        $rootScope = $injector.get("$rootScope");
+        $compile = $injector.get('$compile');
+        $controller = $injector.get('$controller');
+        element = angular.element('<${directiveName}></${directiveName}>');
+        scope = $rootScope.$new();
+        // wrap scope changes using $apply
+        scope.$apply(function(){
+            $compile(element)(scope);
+        });
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<${directiveName}></${directiveName}>');
-    element = $compile(element)(scope);
     expect(element.text()).toBe('this is the ${typeName} directive');
+    //expect(element[0].innerHTML).toEqual('<span class="ng-scope">hello</span>');
   }));
 });

@@ -10,25 +10,54 @@ if (jasmine.version) { //the case for version 2.0.0
 }
 
 describe('Controller: ${typeName}', function () {
+  //@todo: add dependenci variables
+  var ${typeName}, $rootScope, $compile, $scope, $controller,
+  CacheFactory;
 
-  // load the controller's module
-  beforeEach(function() {
-    module('${module}')
-  });
-
-  var ${typeName},
-    scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
+  beforeEach(function(){
+    //inject each dependency
+    <% _.each(dependency, function(inject) { %>
+      module('${inject}');
+    <% }); %>
+    //inject angular module
+    module('${module}');
+
+    inject(function ($injector) {
+          CacheFactory = $injector.get("CacheFactory");
+          $rootScope = $injector.get("$rootScope");
+          $controller = $injector.get('$controller');
+          $compile = $injector.get('$compile');
+          $timeout = $injector.get('$timeout');
+          //$cookieStore = $injector.get('$cookieStore');
+          $q = $injector.get('$q');
+          $scope = $rootScope.$new();
+    })
+
     ${typeName} = $controller('${typeName}', {
       $scope: scope
       // place here mocked dependencies
     });
-  }));
+
+
+  });
 
   it('should attach a list of awesomeThings to the scope', function () {
     expect(${typeName}).toBeDefined();
+  });
+
+
+  //each function should be defined
+  <% _.each(funcObj, function(o) { %>
+  it('should ${o.name} defined function', function () {
+      //Dependency is: [${o.dep}]
+      expect(${typeName}.${o.name}).toBeDefined();
+    });
+  <% }); %>
+
+  //@todo: after each function
+  afterEach(function () {
+
   });
 });
