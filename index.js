@@ -9,7 +9,7 @@ var gutil = require('gulp-util');
 var fs = require("fs");
 var testHelper = require("./src/helper.js");
 
-var DEBUG = 'service';
+var PluginError = gutil.PluginError;
 // Consts
 var PLUGIN_NAME = 'gulp-create-test-files';
 
@@ -69,13 +69,13 @@ gulpTests.prototype.init = function(opts) {
 
                 var typeTestCtrl = /\.(controller|service|factory|config|run|directive|config)[\(\']'(\w*)'/g;
                 var typeTestModule = /\.(module)[\(\']'(.*)'/g;
-                var typeModuleDependency = /(\[[\s\S]*?\])\)/g;
+                var typeModuleDependency = /module\(\'\w+\'\,\s+(\[[\s\S]*?\])\)/g;
                 var match = typeTestCtrl.exec(String(file.contents));
                 var modulematch = typeTestModule.exec(String(file.contents));
                 var dep = typeModuleDependency.exec(String(file.contents));
 
                 var matchFunctions = testHelper.getAllFunctions(String(file.contents));
-
+                var matchServices;
 
 
                 var opt = {
@@ -94,13 +94,11 @@ gulpTests.prototype.init = function(opts) {
                 if (match) {
                     opt.type = match[1];
                     opt.typeName = match[2];
-                    var matchServices = testHelper.getAllServices(String(file.contents), match[2]);
+                    matchServices = testHelper.getAllServices(String(file.contents));
                 }
-                if (dep) {
-                    dep = dep[1].replace("[", "");
-                    dep = dep.replace("]", "");
-                    dep = dep.split(',');
-                    opt.dependency = dep;
+                if (dep && modulematch[1]) {
+
+                    opt.dependency = eval(dep[1]);
                 }
                 if (opt.type === null && modulematch) {
                     opt.module = modulematch[2];
@@ -116,7 +114,11 @@ gulpTests.prototype.init = function(opts) {
                 if (opt.type === 'service'||'factory') {
                     opt.services = matchServices;
                 }
-                console.log(opt.services);
+
+                opt.caches = testHelper.getAllCache(String(file.contents));
+
+                console.log(testHelper.getAllDrupal(String(file.contents)));
+
                 var templateFile = (opt.type !== null) ? 'angular.' + opt.type + '.temp' : 'angular.module.temp';
                 var fileContent = String(fs.readFileSync(__dirname + "/templates/" + templateFile, "utf8"));
 
