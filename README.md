@@ -17,21 +17,15 @@ npm install gulp gulp-create-test-files --save-dev
 ### Basic
 
 ```javascript
-var gulpCTF = require('gulp-create-test-files');
+var karmacreator = require('gulp-create-test-files');
 //
 gulp.task('create-test', function() {
-
-    var options = {
-        src: './src/',
-        dist: './dist/',
-        temp: './templates/',
-        testFileSuffix: '.spec.js',
-        projectPrefix: 'projectName'
-    };
-
-    gulp.src(['src/**/*.js'])
-        .pipe(gulpCTF(options))
-        .pipe(gulp.dest('test'));
+    var BASE_DIR = 'your/module/base/path/here';
+    var TEST_DIR = 'your/test/folder/in/the/module';
+    //del([BASE_DIR + TEST_DIR + '/*.spec.js']);
+    gulp.src([BASE_DIR + 'js/**/*.js'])
+        .pipe(karmacreator.init())
+        .pipe(gulp.dest(BASE_DIR + TEST_DIR));
 });
 ```
 
