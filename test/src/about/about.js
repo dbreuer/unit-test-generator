@@ -12,20 +12,7 @@
 
 angular.module('project.about', ['ngRoute'])
 
-    .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-
-        $routeProvider.when('/about', {
-            title: 'About',
-            templateUrl: './site/components/about/about.tpl.html',
-            controller: 'AboutController',
-            controllerAs: 'vm',
-            access: {
-                requiresLogin: false,
-                roles: []
-            }
-        });
-
-    }])
+    .config( config )
 
     .controller('AboutController', AboutController);
 
@@ -40,5 +27,20 @@ function AboutController(){
     var vm = this;
 
     vm.link = "This is set within the controller";
+
+}
+
+function config($routeProvider, $locationProvider) {
+
+    $routeProvider.when('/about', {
+        title: 'About',
+        templateUrl: './site/components/about/about.tpl.html',
+        controller: 'AboutController',
+        controllerAs: 'vm',
+        access: {
+            requiresLogin: false,
+            roles: []
+        }
+    });
 
 }

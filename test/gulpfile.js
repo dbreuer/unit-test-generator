@@ -4,7 +4,7 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var path = require('path');
-var gulpTest = require('../index.js');
+var karmatest = require('../index.js');
 var del = require('del');
 var Server = require('karma').Server;
 
@@ -14,16 +14,9 @@ gulp.task('clean', function() {
 
 gulp.task('build', function() {
 
-    var options = {
-        src: './src/',
-        dist: './dist/',
-        temp: './templates/',
-        testFileSuffix: '.spec.js',
-        projectPrefix: 'project'
-    };
     del(['**/*.spec.js']);
     gulp.src(['src/**/*.js'])
-        .pipe(gulpTest(options))
+        .pipe(karmatest.init())
         .pipe(gulp.dest('test'));
 });
 

@@ -117,7 +117,7 @@ gulpTests.prototype.init = function(opts) {
 
                 opt.caches = testHelper.getAllCache(String(file.contents));
 
-                console.log(testHelper.getAllDrupal(String(file.contents)));
+                console.log(testHelper.getAllConfig(String(file.contents)));
 
                 var templateFile = (opt.type !== null) ? 'angular.' + opt.type + '.temp' : 'angular.module.temp';
                 var fileContent = String(fs.readFileSync(__dirname + "/templates/" + templateFile, "utf8"));

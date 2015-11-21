@@ -32,32 +32,7 @@ angular.module('project', [
 ])
 
     // App config
-    .config([
-
-        '$routeProvider',
-        '$locationProvider',
-        '$httpProvider',
-        'jwtInterceptorProvider',
-
-        function ($routeProvider, $locationProvider, $httpProvider, jwtInterceptorProvider) {
-
-            // @todo - use the HTML5 History API (only set in the main app.js not individual routes...)
-            // @todo - needs nginx proxy to rewrite request to index.html
-
-            //if (window.history && window.history.pushState) {
-            //    $locationProvider.html5Mode(true);
-            //}
-
-            //$httpProvider.interceptors.push('AuthInterceptor');
-            $routeProvider.otherwise({redirectTo: '/frontpage'});
-
-            // Add JWT Token to each request
-            jwtInterceptorProvider.tokenGetter = function () {
-                return localStorage.getItem('aat-auth-token');
-            }
-            $httpProvider.interceptors.push('jwtInterceptor');
-
-        }])
+    .config(config)
 
     // Define App constants (ref env vars)
     // @todo - review how to make this dynamic when ENV_VARS don't exist i.e. AWS s3 bucket
@@ -73,6 +48,26 @@ angular.module('project', [
 // Inject Deps
 appRun.$inject = ['$rootScope', '$location'];
 
+
+function config($routeProvider, $locationProvider, $httpProvider, jwtInterceptorProvider) {
+
+    // @todo - use the HTML5 History API (only set in the main app.js not individual routes...)
+    // @todo - needs nginx proxy to rewrite request to index.html
+
+    //if (window.history && window.history.pushState) {
+    //    $locationProvider.html5Mode(true);
+    //}
+
+    //$httpProvider.interceptors.push('AuthInterceptor');
+    $routeProvider.otherwise({redirectTo: '/frontpage'});
+
+    // Add JWT Token to each request
+    jwtInterceptorProvider.tokenGetter = function () {
+        return localStorage.getItem('aat-auth-token');
+    }
+    $httpProvider.interceptors.push('jwtInterceptor');
+
+}
 
 /**
  *

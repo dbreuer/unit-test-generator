@@ -105,6 +105,29 @@ testHelper.prototype.getAllFunctions = function( content ) {
     return out;
 };
 
+testHelper.prototype.getAllConfig = function( content ) {
+    var m;
+    var out = [];
+    var re = /config\((.*)\)/g;
+        while ((m = re.exec(content)) !== null) {
+            if (m.index === re.lastIndex) {
+                re.lastIndex++;
+            }
+            var lttleReg = m[1].split(',');
+            var i = lttleReg.length;
+            while (i--) {
+                var pattern = lttleReg[i].trim();
+                if (pattern !== 'config') {
+                    var patternBase = new RegExp("" + pattern +".(.*)" );
+                    console.log(patternBase, testHelper.lineNumbers("" + pattern +"\\.(.*)", content));
+                }
+            }
+            out.push();
+        }
+
+    return out;
+}
+
 testHelper.prototype.getAllDrupal = function( content ) {
     var m;
     var out = [];
@@ -117,5 +140,27 @@ testHelper.prototype.getAllDrupal = function( content ) {
 
 }
 
+testHelper.prototype.lineNumberByIndex = function(index,string){
+    // RegExp
+    var line = 0,
+        match,
+        re = /(^)[\S\s]/gm;
+    while (match = re.exec(string)) {
+        if(match.index > index)
+            break;
+        line++;
+    }
+    return line;
+}
+
+testHelper.prototype.lineNumbers = function(needle,haystack){
+    if(needle !== ""){
+        var i = 0,a=[],index=-1;
+        while((index=haystack.match(needle, index+1)) != -1){
+            a.push(testHelper.lineNumberByIndex(index,haystack));
+        }
+        return a;
+    }
+}
 
 module.exports = new testHelper();
