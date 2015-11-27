@@ -25,6 +25,7 @@ testHelper.prototype.capitalize = function(str) {
 testHelper.prototype.dasherize = function( string ) {
     return string. replace ( /([^])([A-Z]+)([^$])/g, '$1-$2$3' ). toLowerCase();
 };
+
 testHelper.prototype.isAngular = function( file ) {
     var angularRegExp = /\.(module)[\(\']'(.*)'/g;
     var match = angularRegExp.exec(String(file.contents));
@@ -53,6 +54,7 @@ testHelper.prototype.hasTest = function( file ) {
     }
     return false;
 };
+
 testHelper.prototype.getAllCache = function( content ) {
     var m;
     var out = [];
@@ -91,10 +93,43 @@ testHelper.prototype.getAllServices = function( content ) {
     return out;
 };
 
+testHelper.prototype.getAllModules = function( content ) {
+    var m;
+    var out = [];
+    var typeTestModule = /\.(module)[\(\']'(.*)'/g;
+    while ((m = typeTestModule.exec(content)) !== null) {
+        if (m.index === typeTestModule.lastIndex) { typeTestModule.lastIndex++; }
+        out.push(m);
+    }
+    return out;
+};
+
+testHelper.prototype.getAllModuleDependency = function( content ) {
+    var m;
+    var out = [];
+    var typeModuleDependency = /module\(\'\w+\'\,\s+(\[[\s\S]*?\])\)/g;
+    while ((m = typeTestModule.exec(content)) !== null) {
+        if (m.index === typeTestModule.lastIndex) { typeTestModule.lastIndex++; }
+        out.push(m);
+    }
+    return out;
+};
+
+testHelper.prototype.getAllProviders = function( content ) {
+    var m;
+    var out = [];
+    var typeTestCtrl = /\.(controller|service|factory|config|run|directive|config)[\(\']'(\w*)'/g;
+    while ((m = typeTestCtrl.exec(content)) !== null) {
+        if (m.index === typeTestCtrl.lastIndex) { typeTestCtrl.lastIndex++; }
+        out.push([m[1], m[2]]);
+    }
+    return out;
+};
+
 testHelper.prototype.getAllFunctions = function( content ) {
     var m;
     var out = [];
-    var re = /function\s+(.\w*)\((.*)\)/gm;
+    var re = /function\s+(.\w*)\((.*)\)|var\s+(\w*)\s+=\s+function\s+\((.*)\)/gm;
     while ((m = re.exec(content)) !== null) {
         if (m.index === re.lastIndex) { re.lastIndex++; }
         var tmpName = m[1];
