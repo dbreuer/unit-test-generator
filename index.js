@@ -19,7 +19,7 @@ function gulpTests() {}
 
 gulpTests.prototype.init = function(opts) {
 
-    gutil.log(gutil.colors.green('Test generator:'), gutil.colors.blue('Init'));
+
 
     var testObject = {};
 
@@ -49,16 +49,16 @@ gulpTests.prototype.init = function(opts) {
 
 
                 if (!testHelper.isAngular(file)) {
-                    gutil.log('Skipped:', 'not angular file', gutil.colors.red("File not created"));
+                    console.log('Skipped:', 'not angular file', "File not created");
                     return cb();
                 }
 
                 if (testHelper.hasTest(file)) {
-                    gutil.log('Skipped:', 'has test file', gutil.colors.red("File not created"));
+                    console.log('Skipped:', 'has test file', "File not created");
                     return cb();
                 }
 
-                gutil.log(gutil.colors.green(file.path));
+                console.log(file.path);
 
 
 
@@ -68,14 +68,10 @@ gulpTests.prototype.init = function(opts) {
                  * module type regex
                  * @type {RegExp}
                  */
-                var textContent = String(file.contents);
-
-
-
-                var modulematch = typeTestModule.exec(textContent);
-                var dep = typeModuleDependency.exec(textContent);
-                var match = testHelper.getAllProviders(textContent);
-                var matchFunctions = testHelper.getAllFunctions(textContent);
+                
+                
+                var match = testHelper.getAllProviders(file.contents);
+                var matchFunctions = testHelper.getAllFunctions(file.contents);
                 var matchServices;
 
 
@@ -92,18 +88,14 @@ gulpTests.prototype.init = function(opts) {
                     name: testHelper.truncateJsSuffix(_(file.path.split('/')).last()),
                     capitalizedName: testHelper.capitalize(testHelper.truncateJsSuffix(_(file.path.split('/')).last()))
                 };
+                console.log(match[0]);
                 if (match) {
                     opt.type = match[1];
                     opt.typeName = match[2];
                     matchServices = testHelper.getAllServices();
                 }
-                if (dep && modulematch[1]) {
 
-                    opt.dependency = eval(dep[1]);
-                }
-                if (opt.type === null && modulematch) {
-                    opt.module = modulematch[2];
-                }
+
                 if (opt.type === 'directive') {
                     opt.directiveName = testHelper.dasherize(opt.typeName);
                 }
@@ -116,29 +108,32 @@ gulpTests.prototype.init = function(opts) {
                     opt.services = matchServices;
                 }
 
-                opt.caches = testHelper.getAllCache(textContent);
+                opt.caches = testHelper.getAllCache(file.contents);
                 /**
                  *
                  * @type {{functions: *}}
                  */
                 testObject = {
-
-                    providers: testHelper.getAllProviders(textContent),
-                    functions: testHelper.getAllFunctions(textContent),
-                    cache: testHelper.getAllCache(textContent),
-                    services: testHelper.getAllServices(textContent)
+                    module: testHelper.getAllModules(file.contents),
+                    dependency: testHelper.getAllModuleDependency(file.contents),
+                    providers: testHelper.getAllProviders(file.contents),
+                    functions: testHelper.getAllFunctions(file.contents),
+                    cache: testHelper.getAllCache(file.contents),
+                    services: testHelper.getAllServices(file.contents)
                 };
-                console.log(testObject);
 
-                var templateFile = (opt.type !== null) ? 'angular.' + opt.type + '.temp' : 'angular.module.temp';
+                fs.writeFile('message.json', JSON.stringify(testObject), 'utf8', function(response){
+                    console.log("Test file: ", response)
+                });
+                var templateFile = (opt.type === void 0) ? 'angular.' + opt.type + '.temp' : 'angular.module.temp';
                 var fileContent = String(fs.readFileSync(__dirname + "/templates/" + templateFile, "utf8"));
 
                 var compiled = _.template(fileContent);
 
                 file.contents = new Buffer(compiled(opt));
 
-                file.path = gutil.replaceExtension(file.path, '.spec.js'); // file.js
-                gutil.log('Created test files: ', gutil.colors.green(_(file.path.split('/')).last()));
+                file.path = testHelper.replaceExtension(file.path, '.spec.js'); // file.js
+                console.log('Created test files: ', _(file.path.split('/')).last());
             }
 
 

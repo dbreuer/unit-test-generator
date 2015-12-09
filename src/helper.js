@@ -12,6 +12,16 @@ var fs = require('fs');
 
 function testHelper() {}
 
+testHelper.prototype.removeExtension = function(filename){
+    var lastDotPosition = filename.lastIndexOf(".");
+    if (lastDotPosition === -1) return filename;
+    else return filename.substr(0, lastDotPosition);
+};
+
+testHelper.prototype.replaceExtension = function(filename, newextension) {
+    return this.removeExtension(filename) + newextension;
+}
+
 testHelper.prototype.truncateJsSuffix = function(name) {
 
     return name.replace(/.js$/i, '');
@@ -99,7 +109,8 @@ testHelper.prototype.getAllModules = function( content ) {
     var typeTestModule = /\.(module)[\(\']'(.*)'/g;
     while ((m = typeTestModule.exec(content)) !== null) {
         if (m.index === typeTestModule.lastIndex) { typeTestModule.lastIndex++; }
-        out.push(m);
+        out.push(m[1]);
+        out.push(m[2]);
     }
     return out;
 };
@@ -108,8 +119,8 @@ testHelper.prototype.getAllModuleDependency = function( content ) {
     var m;
     var out = [];
     var typeModuleDependency = /module\(\'\w+\'\,\s+(\[[\s\S]*?\])\)/g;
-    while ((m = typeTestModule.exec(content)) !== null) {
-        if (m.index === typeTestModule.lastIndex) { typeTestModule.lastIndex++; }
+    while ((m = typeModuleDependency.exec(content)) !== null) {
+        if (m.index === typeModuleDependency.lastIndex) { typeModuleDependency.lastIndex++; }
         out.push(m);
     }
     return out;
@@ -123,7 +134,7 @@ testHelper.prototype.getAllProviders = function( content ) {
         if (m.index === typeTestCtrl.lastIndex) { typeTestCtrl.lastIndex++; }
         out.push([m[1], m[2]]);
     }
-    return out;
+    return out[0];
 };
 
 testHelper.prototype.getAllFunctions = function( content ) {
