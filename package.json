@@ -1,6 +1,6 @@
 {
-  "name": "gulp-create-test-files",
-  "version": "0.1.0",
+  "name": "episto",
+  "version": "0.1.1",
   "description": "Gulp Karma unit test file creator for Native and Angular Javascripts.",
   "main": "index.js",
   "directories": {
@@ -39,5 +39,11 @@
     "through2": "^2.0.0",
     "uglify-js": "^2.6.0",
     "uglifyjs": "^2.4.10"
+  },
+  "preferGlobal": true,
+  "bin": "bin/episto",
+  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">= 0.10.x"
   }
 }
