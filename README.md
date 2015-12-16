@@ -4,11 +4,11 @@
 
 ## Installation
 
-The easiest way is to install `gulp-create-test-files` as a `devDependency`,
+The easiest way is to install `gulp-create-test-files`
 by running
 
 ```bash
-npm install gulp gulp-create-test-files --save-dev
+npm install gulp-create-test-files -g
 ```
 
 
@@ -16,16 +16,22 @@ npm install gulp gulp-create-test-files --save-dev
 
 ### Basic
 
-```javascript
-var karmacreator = require('gulp-create-test-files');
-//
-gulp.task('create-test', function() {
-    var BASE_DIR = 'your/module/base/path/here';
-    var TEST_DIR = 'your/test/folder/in/the/module';
-    //del([BASE_DIR + TEST_DIR + '/*.spec.js']);
-    gulp.src([BASE_DIR + 'js/**/*.js'])
-        .pipe(karmacreator.init())
-        .pipe(gulp.dest(BASE_DIR + TEST_DIR));
+```bash
+epsito example.js example.spec.js
+
+epsito init
+
+episto review
+
+episto es6
+
+episto angular2ts
+
+episto report
+
+episto forceawakens
+ 
+ 
 });
 ```
 
