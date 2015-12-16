@@ -67,6 +67,10 @@ switch (command) {
         run.default();
         break;
 
+    case 'debug':
+        run.debug(args[1]);
+        break;
+
     case 'current':
         run.current();
         break;
@@ -98,6 +102,11 @@ function validate(expression, message, command) {
 function help(one) {
 
     var commands = [
+        {
+            name: 'debug',
+            usage: 'debug',
+            description: 'Create a test debug report.'
+        },
     //{
     //    name: 'parse',
     //    usage: 'SOURCE DEST',

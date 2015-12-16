@@ -116,6 +116,44 @@ run.create = function (outputPathArg) {
     });
 };
 
+
+run.debug = function (sourcePathArg) {
+    var sourcePath = path.resolve(sourcePathArg);
+    //var outputPath = path.resolve(outputPathArg);
+
+    var source = '';
+    try {
+        source = fs.readFileSync(sourcePath, 'utf8');
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            throw new UserError('Source file not found.');
+        }
+    }
+
+    var units = parse(source);
+
+    var processedUnits = units.filter(function (unit) {
+        return _.contains(config.units.process, unit.type);
+    });
+
+    if (!processedUnits.length) {
+        throw new UserError('Could not find any units.');
+    }
+
+    units = _.sortByKeys(units, config.units.process, 'type');
+
+    ask.pickUnit(units, function (pickedUnit) {
+
+        if (units.length === 1) {
+            log.pref('Generating test file for %s "%s" from module "%s" ...', pickedUnit.type, pickedUnit.name, pickedUnit.module.name);
+        }
+
+        identify(pickedUnit, function (unit) {
+            //generate(unit, outputPath);
+        });
+    });
+};
+
 run.parse = function (sourcePathArg, outputPathArg) {
     var sourcePath = path.resolve(sourcePathArg);
     var outputPath = path.resolve(outputPathArg);
@@ -166,10 +204,11 @@ function identify(unit, callback) {
     // sort before asking
     var unknown = _.sortByKeys(deps.unknown, config.dependencies.process, 'type');
 
-    ask.identifyDeps(unknown, function (identified) {
-        unit.deps = deps.known.concat(identified);
-        callback(unit);
-    });
+    console.log(unit);
+    //ask.identifyDeps(unknown, function (identified) {
+    //    unit.deps = deps.known.concat(identified);
+    //    callback(unit);
+    //});
 }
 
 function generate(unit, outputPath) {
